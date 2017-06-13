@@ -45,6 +45,7 @@ namespace BSF
         static unsigned analysis(const uint64_t** lib, unsigned** c, const unsigned nlib, const unsigned nrow);
         static unsigned analysis_with_chunks(const uint64_t** lib, unsigned** c, const unsigned x1, const unsigned x2, const unsigned nrow);
         static unsigned analysis_with_chunks(const uint64_t** lib, unsigned** c, const unsigned x1, const unsigned x2, const unsigned y1, const unsigned y2, const unsigned nrow);
+        static unsigned analysis_with_query(const uint64_t** lib, const uint64_t** q, unsigned** c, const unsigned x1, const unsigned x2, const unsigned y1, const unsigned y2, const unsigned nrow);
         static unsigned benchmark(const uint64_t** lib, const unsigned nlib, const unsigned nrow);
     };
 }

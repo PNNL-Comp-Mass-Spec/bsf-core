@@ -89,7 +89,6 @@ namespace BSF
                 for ( j = 0; j < size; j++) {
                     _xor = sim(lib[i][j], lib[k][j]);
                     count += __builtin_popcountll(_xor);
-                    // if (k==0&&i==1) printf("%d\t%llu\t%llu\t%d\n", j, lib[i][j], lib[k][j], count);
                 }
                 c[k][i] = count;
             }
@@ -143,6 +142,33 @@ namespace BSF
                 count = 0;
                 for ( j = 0; j < size; j++) {
                     _xor = sim(lib[i][j], lib[k][j]);
+                    count += __builtin_popcountll(_xor);
+                }
+                c[k-x1][i-y1] = count;
+            }
+        }
+        return 0;
+    }
+
+    // to analyse the similarity between columns of lib and q matrix
+    // compare between lib[x1:x2] and q[y1:y2]
+    unsigned BSFCore::analysis_with_query(const uint64_t** lib, const uint64_t** q, unsigned** c, const unsigned x1, const unsigned x2, const unsigned y1, const unsigned y2, const unsigned nrow)
+    {
+        unsigned size = (nrow / 64);
+        unsigned k, i, j;
+        uint64_t _xor;
+        unsigned count = 0;
+
+        #ifdef _OPENMP
+        printf("==================OPENMP=======analysis_with_query=============\n");
+        #pragma omp parallel num_threads(NUM_THREADS)
+        #pragma omp for private(_xor, i, j) schedule(dynamic) reduction(+:count)
+        #endif
+        for( k = x1; k < x2; k++) {
+            for ( i = y1; i < y2; i++) {
+                count = 0;
+                for ( j = 0; j < size; j++) {
+                    _xor = sim(q[i][j], lib[k][j]);
                     count += __builtin_popcountll(_xor);
                 }
                 c[k-x1][i-y1] = count;
